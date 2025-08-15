@@ -1,5 +1,5 @@
 // lib/apartment-validation.ts
-import { CreateApartmentRequest, UpdateApartmentRequest } from '@/types/apartment';
+import { CreateApartmentRequest, UpdateApartmentRequest } from '@/modules/apartment/domain/entities/apartment.entity';
 import { ApiError } from './api-response';
 
 export function validateCreateApartment(data: any): CreateApartmentRequest {
