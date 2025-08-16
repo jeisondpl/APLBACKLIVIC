@@ -1,13 +1,10 @@
-// app/api/apartments/route.ts
 import { NextRequest } from 'next/server';
 import { handleApiError, createApiResponse } from '@/app/lib/api-response';
-import { MemoryApartmentRepository } from '@/modules/apartment/infrastructure/MemoryApartmentRepository';
-import { GetApartments } from '@/modules/apartment/aplications/getApartments';
-import { CreateApartment } from '@/modules/apartment/aplications/createApartment';
-import { validateCreateApartment } from '@/modules/apartment/domain/validations/apartment.schema';
+import { MemoryTowerRepository } from '@/modules/tower/infrastructure/MemoryTowerRepository';
+import { GetTowers } from '@/modules/tower/aplications/getTowers';
+import { CreateTower } from '@/modules/tower/aplications/createTower';
+import { validateCreateTower } from '@/modules/tower/domain/validations/tower.schema';
 
-
-// GET /api/apartments
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
@@ -18,8 +15,8 @@ export async function GET(req: NextRequest) {
             page: parseInt(searchParams.get("page") || "1"),
         };
 
-        const repo = new MemoryApartmentRepository();
-        const useCase = new GetApartments(repo);
+        const repo = new MemoryTowerRepository();
+        const useCase = new GetTowers(repo);
         const result = await useCase.execute(filters);
 
         return createApiResponse(result.data, `Total: ${result.total}`, 200, {
@@ -35,15 +32,14 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const validatedData = validateCreateApartment(body);
+        const validatedData = validateCreateTower(body);
 
-        const repo = new MemoryApartmentRepository();
-        const useCase = new CreateApartment(repo);
-        const newApartment = await useCase.execute(validatedData);
+        const repo = new MemoryTowerRepository();
+        const useCase = new CreateTower(repo);
+        const newTower = await useCase.execute(validatedData);
 
-        return createApiResponse(newApartment, "Apartamento creado exitosamente", 201);
+        return createApiResponse(newTower, "Torre creada exitosamente", 201);
     } catch (error) {
         return handleApiError(error);
     }
 }
-

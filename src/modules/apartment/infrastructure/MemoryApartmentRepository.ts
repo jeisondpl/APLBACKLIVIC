@@ -51,12 +51,45 @@ export class MemoryApartmentRepository implements ApartmentRepository {
         return { data: filtered.slice(start, end), total };
     }
 
+    async getById(id: number): Promise<Apartment | null> {
+        return apartments.find(a => a.id === id) || null;
+    }
+
     async create(apartment: Apartment) {
         if (apartments.some(a => a.numero === apartment.numero)) {
             throw new ApiError("Número de apartamento duplicado", 400);
         }
         apartments.push(apartment);
         return apartment;
+    }
+
+    async update(id: number, updateData: Partial<Omit<Apartment, "id" | "createdAt" | "updatedAt">>): Promise<Apartment | null> {
+        const index = apartments.findIndex(a => a.id === id);
+        if (index === -1) {
+            return null;
+        }
+
+        if (updateData.numero && apartments.some(a => a.numero === updateData.numero && a.id !== id)) {
+            throw new ApiError("Número de apartamento duplicado", 400);
+        }
+
+        apartments[index] = {
+            ...apartments[index],
+            ...updateData,
+            updatedAt: new Date().toISOString()
+        };
+
+        return apartments[index];
+    }
+
+    async delete(id: number): Promise<boolean> {
+        const index = apartments.findIndex(a => a.id === id);
+        if (index === -1) {
+            return false;
+        }
+
+        apartments.splice(index, 1);
+        return true;
     }
 
     async updateMany(list: Partial<Apartment>[]) {
