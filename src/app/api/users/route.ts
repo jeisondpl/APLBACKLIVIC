@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
             message: 'Usuario creado exitosamente'
         }, { status: 201 });
 
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { success: false, error: 'Error al procesar la solicitud' },
             { status: 400 }
@@ -140,7 +140,7 @@ export async function DELETE(request: NextRequest) {
             success: true,
             message: `${ids?.length || 0} usuarios eliminados`
         });
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { success: false, error: 'Error en eliminación' },
             { status: 400 }

@@ -4,7 +4,7 @@ import { ApartmentRepository } from "../domain/models/apartment.repository";
 
 
 
-let apartments: Apartment[] = [{
+const apartments: Apartment[] = [{
     id: 1,
     nombre: 'Apartamento Premium Vista al Mar',
     numero: 'A101',

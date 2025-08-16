@@ -6,7 +6,7 @@ interface RouteParams {
 }
 
 // Simulamos la misma base de datos
-let users = [
+const users = [
     { id: 1, name: 'Juan Pérez', email: 'juan@email.com', createdAt: '2024-01-15' },
     { id: 2, name: 'María García', email: 'maria@email.com', createdAt: '2024-01-16' }
 ];
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
             data: user
         });
 
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { success: false, error: 'Error interno' },
             { status: 500 }
@@ -64,7 +64,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             message: 'Usuario actualizado'
         });
 
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { success: false, error: 'Error en actualización' },
             { status: 400 }
@@ -95,7 +95,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
             message: 'Usuario eliminado'
         });
 
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { success: false, error: 'Error en eliminación' },
             { status: 500 }
