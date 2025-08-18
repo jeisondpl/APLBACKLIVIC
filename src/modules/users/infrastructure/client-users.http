@@ -1,0 +1,143 @@
+@baseUrl = http://localhost:3000/api/users
+
+### GET all users
+GET {{ baseUrl }} HTTP/1.1
+
+### GET users with search
+GET {{ baseUrl }}?search=juan HTTP/1.1
+
+### GET users with pagination
+GET {{ baseUrl }}?page=1&limit=2 HTTP/1.1
+
+### GET users with email filter
+GET {{ baseUrl }}?email=juan@email.com HTTP/1.1
+
+### GET user by ID
+GET {{ baseUrl }}/1 HTTP/1.1
+
+### POST - Create new user
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Sofia Mendoza",
+    "email": "sofia@email.com",
+    "edad": 32
+}
+
+### POST - Create young professional
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Diego Ramírez",
+    "email": "diego@email.com",
+    "edad": 26
+}
+
+### POST - Create senior user
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Elena Vargas",
+    "email": "elena@email.com",
+    "edad": 45
+}
+
+### POST - Create business user
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Roberto Silva",
+    "email": "roberto@email.com",
+    "edad": 38
+}
+
+### POST - Create student user
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Camila Torres",
+    "email": "camila@email.com",
+    "edad": 22
+}
+
+### PUT - Update user
+PUT {{ baseUrl }}/1 HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Juan Pérez ACTUALIZADO",
+    "edad": 31
+}
+
+### PUT - Update only email
+PUT {{ baseUrl }}/2 HTTP/1.1
+content-type: application/json
+
+{
+    "email": "maria.garcia.new@email.com"
+}
+
+### PUT - Update only age
+PUT {{ baseUrl }}/3 HTTP/1.1
+content-type: application/json
+
+{
+    "edad": 36
+}
+
+### DELETE user
+DELETE {{ baseUrl }}/4 HTTP/1.1
+
+### POST - Test validation error (missing required fields)
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "",
+    "email": "test@email.com"
+}
+
+### POST - Test validation error (invalid email)
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Usuario Inválido",
+    "email": "email-invalido",
+    "edad": 25
+}
+
+### POST - Test validation error (invalid age)
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Usuario Edad Inválida",
+    "email": "usuario@email.com",
+    "edad": 0
+}
+
+### POST - Test validation error (age too high)
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Usuario Muy Mayor",
+    "email": "mayor@email.com",
+    "edad": 150
+}
+
+### POST - Test duplicate email error
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Usuario Duplicado",
+    "email": "juan@email.com",
+    "edad": 30
+}

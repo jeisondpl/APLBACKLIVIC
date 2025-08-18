@@ -20,23 +20,30 @@ export class ApiError extends Error {
 export function handleApiError(error: unknown): NextResponse {
     console.error('API Error:', error);
 
+    const headers = new Headers({
+        'Access-Control-Allow-Origin': 'http://localhost:3001',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Credentials': 'true',
+    });
+
     if (error instanceof ApiError) {
         return NextResponse.json(
             { success: false, error: error.message },
-            { status: error.status }
+            { status: error.status, headers }
         );
     }
 
     if (error instanceof Error) {
         return NextResponse.json(
             { success: false, error: error.message },
-            { status: 500 }
+            { status: 500, headers }
         );
     }
 
     return NextResponse.json(
         { success: false, error: 'Error interno del servidor' },
-        { status: 500 }
+        { status: 500, headers }
     );
 }
 
@@ -53,15 +60,29 @@ export function createApiResponse<T>(
         ...pagination
     };
 
-    return NextResponse.json(response, { status });
+    const headers = new Headers({
+        'Access-Control-Allow-Origin': 'http://localhost:3001',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Credentials': 'true',
+    });
+
+    return NextResponse.json(response, { status, headers });
 }
 
 export function createErrorResponse(
     error: string,
     status: number = 400
 ): NextResponse {
+    const headers = new Headers({
+        'Access-Control-Allow-Origin': 'http://localhost:3001',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Credentials': 'true',
+    });
+
     return NextResponse.json(
         { success: false, error },
-        { status }
+        { status, headers }
     );
 }

@@ -1,104 +1,64 @@
-// app/api/users/[id]/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { handleApiError, createApiResponse } from '@/app/lib/api-response';
+import { PostgresUserRepository } from '@/modules/users/infrastructure/UserRepository';
+import { GetUserById } from '@/modules/users/aplications/getUserById';
+import { UpdateUser } from '@/modules/users/aplications/updateUser';
+import { DeleteUser } from '@/modules/users/aplications/deleteUser';
+import { validateUpdateUser } from '@/modules/users/domain/validations/user.schema';
 
-interface RouteParams {
-    params: Promise<{ id: string }>; // En Next.js 15, params es una Promise
-}
-
-// Simulamos la misma base de datos
-const users = [
-    { id: 1, name: 'Juan Pérez', email: 'juan@email.com', createdAt: '2024-01-15' },
-    { id: 2, name: 'María García', email: 'maria@email.com', createdAt: '2024-01-16' }
-];
-
-// GET /api/users/[id]
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = await params; // Await params en Next.js 15
-        const userId = parseInt(id);
-
-        const user = users.find(u => u.id === userId);
-
-        if (!user) {
-            return NextResponse.json(
-                { success: false, error: 'Usuario no encontrado' },
-                { status: 404 }
-            );
+        const { id: idStr } = await params;
+        const id = parseInt(idStr);
+        if (isNaN(id)) {
+            return createApiResponse(null, "ID inválido", 400);
         }
 
-        return NextResponse.json({
-            success: true,
-            data: user
-        });
+        const repo = new PostgresUserRepository();
+        const useCase = new GetUserById(repo);
+        const user = await useCase.execute(id);
 
-    } catch {
-        return NextResponse.json(
-            { success: false, error: 'Error interno' },
-            { status: 500 }
-        );
+        return createApiResponse(user, "Usuario encontrado", 200);
+    } catch (error) {
+        return handleApiError(error);
     }
 }
 
-// PUT /api/users/[id]
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = await params;
-        const userId = parseInt(id);
-        const body = await request.json();
-
-        const userIndex = users.findIndex(u => u.id === userId);
-
-        if (userIndex === -1) {
-            return NextResponse.json(
-                { success: false, error: 'Usuario no encontrado' },
-                { status: 404 }
-            );
+        const { id: idStr } = await params;
+        const id = parseInt(idStr);
+        if (isNaN(id)) {
+            return createApiResponse(null, "ID inválido", 400);
         }
 
-        // Actualizar usuario
-        users[userIndex] = { ...users[userIndex], ...body };
+        const body = await req.json();
+        const validatedData = validateUpdateUser(body);
 
-        return NextResponse.json({
-            success: true,
-            data: users[userIndex],
-            message: 'Usuario actualizado'
-        });
+        const repo = new PostgresUserRepository();
+        const useCase = new UpdateUser(repo);
+        const updatedUser = await useCase.execute(id, validatedData);
 
-    } catch {
-        return NextResponse.json(
-            { success: false, error: 'Error en actualización' },
-            { status: 400 }
-        );
+        return createApiResponse(updatedUser, "Usuario actualizado exitosamente", 200);
+    } catch (error) {
+        return handleApiError(error);
     }
 }
 
-// DELETE /api/users/[id]
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = await params;
-        const userId = parseInt(id);
-
-        const userIndex = users.findIndex(u => u.id === userId);
-
-        if (userIndex === -1) {
-            return NextResponse.json(
-                { success: false, error: 'Usuario no encontrado' },
-                { status: 404 }
-            );
+        const { id: idStr } = await params;
+        const id = parseInt(idStr);
+        if (isNaN(id)) {
+            return createApiResponse(null, "ID inválido", 400);
         }
 
-        const deletedUser = users.splice(userIndex, 1)[0];
+        const repo = new PostgresUserRepository();
+        const useCase = new DeleteUser(repo);
+        const result = await useCase.execute(id);
 
-        return NextResponse.json({
-            success: true,
-            data: deletedUser,
-            message: 'Usuario eliminado'
-        });
-
-    } catch {
-        return NextResponse.json(
-            { success: false, error: 'Error en eliminación' },
-            { status: 500 }
-        );
+        return createApiResponse(result, "Usuario eliminado exitosamente", 200);
+    } catch (error) {
+        return handleApiError(error);
     }
 }

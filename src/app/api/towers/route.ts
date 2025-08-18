@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { handleApiError, createApiResponse } from '@/app/lib/api-response';
-import { MemoryTowerRepository } from '@/modules/tower/infrastructure/MemoryTowerRepository';
+import { PostgresTowerRepository } from '@/modules/tower/infrastructure/TowerRepository';
 import { GetTowers } from '@/modules/tower/aplications/getTowers';
 import { CreateTower } from '@/modules/tower/aplications/createTower';
 import { validateCreateTower } from '@/modules/tower/domain/validations/tower.schema';
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
             page: parseInt(searchParams.get("page") || "1"),
         };
 
-        const repo = new MemoryTowerRepository();
+        const repo = new PostgresTowerRepository();
         const useCase = new GetTowers(repo);
         const result = await useCase.execute(filters);
 
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const validatedData = validateCreateTower(body);
 
-        const repo = new MemoryTowerRepository();
+        const repo = new PostgresTowerRepository();
         const useCase = new CreateTower(repo);
         const newTower = await useCase.execute(validatedData);
 

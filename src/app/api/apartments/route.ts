@@ -1,7 +1,7 @@
 // app/api/apartments/route.ts
 import { NextRequest } from 'next/server';
 import { handleApiError, createApiResponse } from '@/app/lib/api-response';
-import { MemoryApartmentRepository } from '@/modules/apartment/infrastructure/MemoryApartmentRepository';
+import { PostgresApartmentRepository } from '@/modules/apartment/infrastructure/ApartmentRepository';
 import { GetApartments } from '@/modules/apartment/aplications/getApartments';
 import { CreateApartment } from '@/modules/apartment/aplications/createApartment';
 import { validateCreateApartment } from '@/modules/apartment/domain/validations/apartment.schema';
@@ -14,11 +14,12 @@ export async function GET(req: NextRequest) {
         const filters = {
             search: searchParams.get("search") || undefined,
             numero: searchParams.get("numero") || undefined,
+            torreId: searchParams.get("torreId") ? parseInt(searchParams.get("torreId")!) : undefined,
             limit: parseInt(searchParams.get("limit") || "10"),
             page: parseInt(searchParams.get("page") || "1"),
         };
 
-        const repo = new MemoryApartmentRepository();
+        const repo = new PostgresApartmentRepository();
         const useCase = new GetApartments(repo);
         const result = await useCase.execute(filters);
 
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const validatedData = validateCreateApartment(body);
 
-        const repo = new MemoryApartmentRepository();
+        const repo = new PostgresApartmentRepository();
         const useCase = new CreateApartment(repo);
         const newApartment = await useCase.execute(validatedData);
 

@@ -1,0 +1,133 @@
+### Variables
+@baseUrl = http://localhost:3000
+@activityTypeId = 1
+
+### GET - Obtener todos los tipos de actividades
+GET {{baseUrl}}/api/activity-types
+Content-Type: application/json
+
+### GET - Obtener tipos con filtros
+GET {{baseUrl}}/api/activity-types?search=aseo&activo=true&limit=5&page=1
+Content-Type: application/json
+
+### GET - Obtener solo tipos activos
+GET {{baseUrl}}/api/activity-types?activo=true
+Content-Type: application/json
+
+### GET - Obtener solo tipos inactivos
+GET {{baseUrl}}/api/activity-types?activo=false
+Content-Type: application/json
+
+### POST - Crear un nuevo tipo de actividad
+POST {{baseUrl}}/api/activity-types
+Content-Type: application/json
+
+{
+  "nombre": "Fumigación",
+  "descripcion": "Actividades de fumigación y control de plagas en apartamentos y áreas comunes",
+  "activo": true
+}
+
+### POST - Crear otro tipo de actividad
+POST {{baseUrl}}/api/activity-types
+Content-Type: application/json
+
+{
+  "nombre": "Jardinería",
+  "descripcion": "Mantenimiento de jardines, plantas y áreas verdes del complejo",
+  "activo": true
+}
+
+### POST - Crear tipo de actividad inactivo
+POST {{baseUrl}}/api/activity-types
+Content-Type: application/json
+
+{
+  "nombre": "Pintura General",
+  "descripcion": "Trabajos de pintura interior y exterior de apartamentos",
+  "activo": false
+}
+
+### GET - Obtener tipo de actividad por ID
+GET {{baseUrl}}/api/activity-types/{{activityTypeId}}
+Content-Type: application/json
+
+### PUT - Actualizar tipo de actividad
+PUT {{baseUrl}}/api/activity-types/{{activityTypeId}}
+Content-Type: application/json
+
+{
+  "descripcion": "Limpieza general que incluye pisos, baños, cocina, áreas comunes y ventanas",
+  "activo": true
+}
+
+### PUT - Desactivar tipo de actividad
+PUT {{baseUrl}}/api/activity-types/{{activityTypeId}}
+Content-Type: application/json
+
+{
+  "activo": false
+}
+
+### DELETE - Eliminar tipo de actividad
+DELETE {{baseUrl}}/api/activity-types/{{activityTypeId}}
+Content-Type: application/json
+
+### POST - Prueba de validación - Nombre requerido
+POST {{baseUrl}}/api/activity-types
+Content-Type: application/json
+
+{
+  "descripcion": "Solo descripción sin nombre"
+}
+
+### POST - Prueba de validación - Descripción requerida
+POST {{baseUrl}}/api/activity-types
+Content-Type: application/json
+
+{
+  "nombre": "Solo nombre"
+}
+
+### POST - Prueba de validación - Nombre muy largo
+POST {{baseUrl}}/api/activity-types
+Content-Type: application/json
+
+{
+  "nombre": "Este es un nombre extremadamente largo que excede los 100 caracteres permitidos para el campo nombre y debería fallar la validación",
+  "descripcion": "Descripción válida"
+}
+
+### POST - Prueba de validación - Descripción muy larga
+POST {{baseUrl}}/api/activity-types
+Content-Type: application/json
+
+{
+  "nombre": "Nombre válido",
+  "descripcion": "Esta es una descripción extremadamente larga que excede los 500 caracteres permitidos para este campo y debería fallar la validación. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+}
+
+### POST - Prueba de duplicado
+POST {{baseUrl}}/api/activity-types
+Content-Type: application/json
+
+{
+  "nombre": "Aseo Básico",
+  "descripcion": "Intento de crear tipo duplicado"
+}
+
+### GET - Tipo inexistente
+GET {{baseUrl}}/api/activity-types/9999
+Content-Type: application/json
+
+### PUT - Actualizar tipo inexistente
+PUT {{baseUrl}}/api/activity-types/9999
+Content-Type: application/json
+
+{
+  "descripcion": "Actualización de tipo inexistente"
+}
+
+### DELETE - Eliminar tipo inexistente
+DELETE {{baseUrl}}/api/activity-types/9999
+Content-Type: application/json

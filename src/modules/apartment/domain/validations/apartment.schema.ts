@@ -10,6 +10,9 @@ export const CreateApartmentSchema = z.object({
     .min(1, "El número es requerido y debe ser una cadena válida"),
   descripcion: z.string()
     .min(1, "La descripción es requerida y debe ser una cadena válida"),
+  torreId: z.number()
+    .int("El ID de la torre debe ser un número entero")
+    .positive("El ID de la torre debe ser positivo"),
 });
 
 // ✅ Schema para actualizar (todos opcionales)
@@ -17,6 +20,10 @@ export const UpdateApartmentSchema = z.object({
   nombre: z.string().min(1, "El nombre debe ser una cadena válida").optional(),
   numero: z.string().min(1, "El número debe ser una cadena válida").optional(),
   descripcion: z.string().min(1, "La descripción debe ser una cadena válida").optional(),
+  torreId: z.number()
+    .int("El ID de la torre debe ser un número entero")
+    .positive("El ID de la torre debe ser positivo")
+    .optional(),
 }).refine(
   (data) => Object.keys(data).length > 0,
   { message: "Al menos un campo debe ser proporcionado para actualizar" }

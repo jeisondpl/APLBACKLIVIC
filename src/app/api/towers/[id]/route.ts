@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { handleApiError, createApiResponse } from '@/app/lib/api-response';
-import { MemoryTowerRepository } from '@/modules/tower/infrastructure/MemoryTowerRepository';
+import { PostgresTowerRepository } from '@/modules/tower/infrastructure/TowerRepository';
 import { GetTowerById } from '@/modules/tower/aplications/getTowerById';
 import { UpdateTower } from '@/modules/tower/aplications/updateTower';
 import { DeleteTower } from '@/modules/tower/aplications/deleteTower';
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             return createApiResponse(null, "ID inválido", 400);
         }
 
-        const repo = new MemoryTowerRepository();
+        const repo = new PostgresTowerRepository();
         const useCase = new GetTowerById(repo);
         const tower = await useCase.execute(id);
 
@@ -35,7 +35,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         const body = await req.json();
         const validatedData = validateUpdateTower(body);
 
-        const repo = new MemoryTowerRepository();
+        const repo = new PostgresTowerRepository();
         const useCase = new UpdateTower(repo);
         const updatedTower = await useCase.execute(id, validatedData);
 
@@ -53,7 +53,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
             return createApiResponse(null, "ID inválido", 400);
         }
 
-        const repo = new MemoryTowerRepository();
+        const repo = new PostgresTowerRepository();
         const useCase = new DeleteTower(repo);
         const result = await useCase.execute(id);
 

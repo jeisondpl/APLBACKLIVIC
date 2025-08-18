@@ -1,0 +1,125 @@
+### Variables
+@baseUrl = http://localhost:3000
+@apartmentId = 1
+
+### GET - Obtener todos los apartamentos
+GET {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+### GET - Obtener apartamentos con filtros
+GET {{baseUrl}}/api/apartments?search=apart&numero=101&torreId=1&limit=5&page=1
+Content-Type: application/json
+
+### GET - Filtrar por torre
+GET {{baseUrl}}/api/apartments?torreId=1
+Content-Type: application/json
+
+### GET - Filtrar por número específico
+GET {{baseUrl}}/api/apartments?numero=102
+Content-Type: application/json
+
+### GET - Obtener apartamento por ID
+GET {{baseUrl}}/api/apartments/{{apartmentId}}
+Content-Type: application/json
+
+### POST - Crear nuevo apartamento
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+  "nombre": "Apartamento Premium 301",
+  "numero": "301",
+  "descripcion": "Apartamento de lujo con vista panorámica y acabados premium",
+  "torreId": 1
+}
+
+### POST - Crear otro apartamento
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+  "nombre": "Apartamento Económico 201",
+  "numero": "201",
+  "descripcion": "Apartamento cómodo y funcional para familias pequeñas",
+  "torreId": 2
+}
+
+### POST - Crear penthouse
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+  "nombre": "Penthouse 501",
+  "numero": "501",
+  "descripcion": "Penthouse exclusivo con terraza privada y jacuzzi",
+  "torreId": 1
+}
+
+### PUT - Actualizar apartamento
+PUT {{baseUrl}}/api/apartments/{{apartmentId}}
+Content-Type: application/json
+
+{
+  "descripcion": "Apartamento completamente renovado con nuevos electrodomésticos",
+  "torreId": 2
+}
+
+### DELETE - Eliminar apartamento
+DELETE {{baseUrl}}/api/apartments/{{apartmentId}}
+Content-Type: application/json
+
+### POST - Prueba de validación - TorreId requerido
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+  "nombre": "Test sin torre",
+  "numero": "888",
+  "descripcion": "Apartamento sin torre asignada"
+}
+
+### POST - Prueba de validación - TorreId inválido
+POST {{baseUrl}}/api/apartments
+Content-Type: application/json
+
+{
+  "nombre": "Test torre inexistente",
+  "numero": "889",
+  "descripcion": "Apartamento con torre inexistente",
+  "torreId": 999
+}
+
+{
+    "nombre": "Apartamento Premium Vista al Mar RENOVADO",
+    "descripcion": "Hermoso apartamento completamente renovado con nuevos acabados de lujo y vista panorámica al océano."
+}
+
+### PUT - Update only name
+PUT {{ baseUrl }}/2 HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Estudio Moderno Centro ACTUALIZADO"
+}
+
+### DELETE apartment
+DELETE {{ baseUrl }}/3 HTTP/1.1
+
+### POST - Test validation error (missing required fields)
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "",
+    "numero": "H401"
+}
+
+### POST - Test duplicate numero error
+POST {{ baseUrl }} HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "Apartamento Duplicado",
+    "numero": "A101",
+    "descripcion": "Este debería fallar por número duplicado"
+}

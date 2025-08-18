@@ -1,0 +1,181 @@
+### Variables
+@baseUrl = http://localhost:3000
+@activityId = 1
+
+### GET - Obtener todas las actividades
+GET {{baseUrl}}/api/activities
+Content-Type: application/json
+
+### GET - Obtener actividades con filtros
+GET {{baseUrl}}/api/activities?search=aseo&tipoId=1&estado=pendiente&limit=5&page=1
+Content-Type: application/json
+
+### GET - Filtrar por apartamento
+GET {{baseUrl}}/api/activities?apartamentoId=1
+Content-Type: application/json
+
+### GET - Filtrar por torre
+GET {{baseUrl}}/api/activities?torreId=1
+Content-Type: application/json
+
+### GET - Filtrar por usuario asignado
+GET {{baseUrl}}/api/activities?usuarioAsignadoId=1
+Content-Type: application/json
+
+### GET - Filtrar por rango de fechas
+GET {{baseUrl}}/api/activities?fechaDesde=2024-01-01T00:00:00Z&fechaHasta=2024-12-31T23:59:59Z
+Content-Type: application/json
+
+### POST - Crear una nueva actividad de aseo básico
+POST {{baseUrl}}/api/activities
+Content-Type: application/json
+
+{
+  "nombre": "Aseo básico Apartamento 101",
+  "tipoId": 1,
+  "descripcion": "Limpieza general del apartamento incluyendo pisos, baños y cocina",
+  "apartamentoId": 1,
+  "usuarioAsignadoId": 1,
+  "estado": "pendiente",
+  "fechaInicio": "2024-01-15T08:00:00Z",
+  "fechaFin": "2024-01-15T12:00:00Z",
+  "observaciones": "Revisar que estén todos los implementos de limpieza"
+}
+
+### POST - Crear actividad de mantenimiento
+POST {{baseUrl}}/api/activities
+Content-Type: application/json
+
+{
+  "nombre": "Mantenimiento sistema eléctrico",
+  "tipoId": 2,
+  "descripcion": "Revisión y mantenimiento del sistema eléctrico de la torre",
+  "torreId": 1,
+  "usuarioAsignadoId": 2,
+  "estado": "pendiente",
+  "fechaInicio": "2024-01-20T09:00:00Z",
+  "fechaFin": "2024-01-20T17:00:00Z",
+  "observaciones": "Verificar interruptores y tableros"
+}
+
+### POST - Crear actividad de aseo profundo
+POST {{baseUrl}}/api/activities
+Content-Type: application/json
+
+{
+  "nombre": "Aseo profundo pre-entrega",
+  "tipoId": 3,
+  "descripcion": "Limpieza profunda del apartamento antes de entrega al cliente",
+  "apartamentoId": 2,
+  "usuarioAsignadoId": 1,
+  "estado": "pendiente",
+  "fechaInicio": "2024-01-25T07:00:00Z",
+  "fechaFin": "2024-01-25T18:00:00Z",
+  "observaciones": "Incluir limpieza de ventanas y electrodomésticos"
+}
+
+### POST - Crear actividad de entrega de apartamento
+POST {{baseUrl}}/api/activities
+Content-Type: application/json
+
+{
+  "nombre": "Entrega apartamento 203",
+  "tipoId": 5,
+  "descripcion": "Proceso de entrega formal del apartamento al cliente",
+  "apartamentoId": 3,
+  "usuarioAsignadoId": 3,
+  "estado": "pendiente",
+  "fechaInicio": "2024-02-01T10:00:00Z",
+  "fechaFin": "2024-02-01T12:00:00Z",
+  "observaciones": "Revisar documentos y llaves"
+}
+
+### POST - Crear actividad de recibo de apartamento
+POST {{baseUrl}}/api/activities
+Content-Type: application/json
+
+{
+  "nombre": "Recibo apartamento 105",
+  "tipoId": 6,
+  "descripcion": "Proceso de recibo del apartamento del cliente saliente",
+  "apartamentoId": 1,
+  "usuarioAsignadoId": 3,
+  "estado": "pendiente",
+  "fechaInicio": "2024-02-05T14:00:00Z",
+  "fechaFin": "2024-02-05T16:00:00Z",
+  "observaciones": "Verificar estado del apartamento y hacer inventario"
+}
+
+### GET - Obtener actividad por ID
+GET {{baseUrl}}/api/activities/{{activityId}}
+Content-Type: application/json
+
+### PUT - Actualizar actividad
+PUT {{baseUrl}}/api/activities/{{activityId}}
+Content-Type: application/json
+
+{
+  "estado": "en_progreso",
+  "observaciones": "Actividad iniciada según cronograma"
+}
+
+### PUT - Completar actividad
+PUT {{baseUrl}}/api/activities/{{activityId}}
+Content-Type: application/json
+
+{
+  "estado": "completada",
+  "fechaFin": "2024-01-15T11:30:00Z",
+  "observaciones": "Actividad completada satisfactoriamente. Apartamento listo para entrega."
+}
+
+### DELETE - Eliminar actividad
+DELETE {{baseUrl}}/api/activities/{{activityId}}
+Content-Type: application/json
+
+### POST - Prueba de validación - Nombre requerido
+POST {{baseUrl}}/api/activities
+Content-Type: application/json
+
+{
+  "tipo": "aseo_basico",
+  "descripcion": "Descripción"
+}
+
+### POST - Prueba de validación - Tipo ID inválido
+POST {{baseUrl}}/api/activities
+Content-Type: application/json
+
+{
+  "nombre": "Test",
+  "tipoId": 999,
+  "descripcion": "Descripción"
+}
+
+### POST - Prueba de validación - Fecha fin antes de inicio
+POST {{baseUrl}}/api/activities
+Content-Type: application/json
+
+{
+  "nombre": "Test fechas",
+  "tipoId": 1,
+  "descripcion": "Descripción",
+  "fechaInicio": "2024-01-15T12:00:00Z",
+  "fechaFin": "2024-01-15T08:00:00Z"
+}
+
+### GET - Actividad inexistente
+GET {{baseUrl}}/api/activities/9999
+Content-Type: application/json
+
+### PUT - Actualizar actividad inexistente
+PUT {{baseUrl}}/api/activities/9999
+Content-Type: application/json
+
+{
+  "estado": "completada"
+}
+
+### DELETE - Eliminar actividad inexistente
+DELETE {{baseUrl}}/api/activities/9999
+Content-Type: application/json

@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { handleApiError, createApiResponse } from '@/app/lib/api-response';
-import { MemoryApartmentRepository } from '@/modules/apartment/infrastructure/MemoryApartmentRepository';
+import { PostgresApartmentRepository } from '@/modules/apartment/infrastructure/ApartmentRepository';
 import { GetApartmentById } from '@/modules/apartment/aplications/getApartmentById';
 import { UpdateApartment } from '@/modules/apartment/aplications/updateApartment';
 import { DeleteApartment } from '@/modules/apartment/aplications/deleteApartment';
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             return createApiResponse(null, "ID inválido", 400);
         }
 
-        const repo = new MemoryApartmentRepository();
+        const repo = new PostgresApartmentRepository();
         const useCase = new GetApartmentById(repo);
         const apartment = await useCase.execute(id);
 
@@ -35,7 +35,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         const body = await req.json();
         const validatedData = validateUpdateApartment(body);
 
-        const repo = new MemoryApartmentRepository();
+        const repo = new PostgresApartmentRepository();
         const useCase = new UpdateApartment(repo);
         const updatedApartment = await useCase.execute(id, validatedData);
 
@@ -53,7 +53,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
             return createApiResponse(null, "ID inválido", 400);
         }
 
-        const repo = new MemoryApartmentRepository();
+        const repo = new PostgresApartmentRepository();
         const useCase = new DeleteApartment(repo);
         const result = await useCase.execute(id);
 
