@@ -82,6 +82,8 @@ export async function createTables() {
         fecha_check_out DATE NOT NULL,
         estado VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (estado IN ('pending', 'confirmed', 'cancelled', 'completed')),
         noches INTEGER NOT NULL CHECK (noches > 0),
+        tarifa_por_noche DECIMAL(10,2) NOT NULL CHECK (tarifa_por_noche > 0),
+        tarifa_limpieza DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK (tarifa_limpieza >= 0),
         observaciones TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -121,12 +123,12 @@ export async function createTables() {
 
     // Insert sample data for booking_apartments
     await sql`
-      INSERT INTO booking_apartments (apartamento_id, torre_id, usuario_id, fecha_check_in, fecha_check_out, estado, noches, observaciones) VALUES 
-      (1, 1, 1, '2024-03-15', '2024-03-20', 'confirmed', 5, 'Reserva familiar para vacaciones de semana santa'),
-      (2, 1, 2, '2024-03-22', '2024-03-25', 'pending', 3, 'Viaje de negocios'),
-      (3, 2, 3, '2024-04-01', '2024-04-10', 'confirmed', 9, 'Reserva de penthouse para luna de miel'),
-      (1, 1, 2, '2024-04-15', '2024-04-18', 'pending', 3, 'Fin de semana largo'),
-      (2, 1, 1, '2024-05-01', '2024-05-05', 'cancelled', 4, 'Cancelada por cambio de planes');
+      INSERT INTO booking_apartments (apartamento_id, torre_id, usuario_id, fecha_check_in, fecha_check_out, estado, noches, tarifa_por_noche, tarifa_limpieza, observaciones) VALUES 
+      (1, 1, 1, '2024-03-15', '2024-03-20', 'confirmed', 5, 150000.00, 50000.00, 'Reserva familiar para vacaciones de semana santa'),
+      (2, 1, 2, '2024-03-22', '2024-03-25', 'pending', 3, 120000.00, 40000.00, 'Viaje de negocios'),
+      (3, 2, 3, '2024-04-01', '2024-04-10', 'confirmed', 9, 300000.00, 80000.00, 'Reserva de penthouse para luna de miel'),
+      (1, 1, 2, '2024-04-15', '2024-04-18', 'pending', 3, 150000.00, 50000.00, 'Fin de semana largo'),
+      (2, 1, 1, '2024-05-01', '2024-05-05', 'cancelled', 4, 120000.00, 40000.00, 'Cancelada por cambio de planes');
     `;
 
     // Create indexes for better performance

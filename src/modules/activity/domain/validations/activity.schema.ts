@@ -28,23 +28,25 @@ export const createActivitySchema = z.object({
         .positive("El ID del usuario debe ser positivo")
         .optional(),
     estado: activityStatusSchema.default(ActivityStatus.PENDIENTE),
-    fechaInicio: z.string()
+    fechaProgramada: z.string()
         .datetime("Formato de fecha inválido")
+        .or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha debe tener formato YYYY-MM-DD"))
         .optional(),
-    fechaFin: z.string()
+    fechaCompletada: z.string()
         .datetime("Formato de fecha inválido")
+        .or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha debe tener formato YYYY-MM-DD"))
         .optional(),
     observaciones: z.string()
         .max(1000, "Las observaciones no pueden exceder 1000 caracteres")
         .optional()
 }).refine((data) => {
-    if (data.fechaInicio && data.fechaFin) {
-        return new Date(data.fechaInicio) <= new Date(data.fechaFin);
+    if (data.fechaProgramada && data.fechaCompletada) {
+        return new Date(data.fechaProgramada) <= new Date(data.fechaCompletada);
     }
     return true;
 }, {
-    message: "La fecha de inicio debe ser anterior o igual a la fecha de fin",
-    path: ["fechaFin"]
+    message: "La fecha programada debe ser anterior o igual a la fecha de completado",
+    path: ["fechaCompletada"]
 });
 
 export const updateActivitySchema = z.object({
@@ -73,23 +75,25 @@ export const updateActivitySchema = z.object({
         .positive("El ID del usuario debe ser positivo")
         .optional(),
     estado: activityStatusSchema.optional(),
-    fechaInicio: z.string()
+    fechaProgramada: z.string()
         .datetime("Formato de fecha inválido")
+        .or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha debe tener formato YYYY-MM-DD"))
         .optional(),
-    fechaFin: z.string()
+    fechaCompletada: z.string()
         .datetime("Formato de fecha inválido")
+        .or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha debe tener formato YYYY-MM-DD"))
         .optional(),
     observaciones: z.string()
         .max(1000, "Las observaciones no pueden exceder 1000 caracteres")
         .optional()
 }).refine((data) => {
-    if (data.fechaInicio && data.fechaFin) {
-        return new Date(data.fechaInicio) <= new Date(data.fechaFin);
+    if (data.fechaProgramada && data.fechaCompletada) {
+        return new Date(data.fechaProgramada) <= new Date(data.fechaCompletada);
     }
     return true;
 }, {
-    message: "La fecha de inicio debe ser anterior o igual a la fecha de fin",
-    path: ["fechaFin"]
+    message: "La fecha programada debe ser anterior o igual a la fecha de completado",
+    path: ["fechaCompletada"]
 });
 
 export const validateCreateActivity = (data: unknown) => {

@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS users (
     nombre VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     edad INTEGER CHECK (edad > 0),
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) DEFAULT 'user' CHECK (role IN ('admin', 'user', 'manager')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -81,6 +83,8 @@ CREATE TABLE IF NOT EXISTS booking_apartments (
     fecha_check_out DATE NOT NULL,
     estado VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (estado IN ('pending', 'confirmed', 'cancelled', 'completed')),
     noches INTEGER NOT NULL CHECK (noches > 0),
+    tarifa_por_noche DECIMAL(10,2) DEFAULT 0.00,
+    tarifa_limpieza DECIMAL(10,2) DEFAULT 0.00,
     observaciones TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -105,10 +109,11 @@ INSERT INTO apartments (nombre, numero, descripcion, torre_id) VALUES
 ON CONFLICT (numero) DO NOTHING;
 
 -- Insert sample data for users
-INSERT INTO users (nombre, email, edad) VALUES 
-('Juan Pérez', 'juan@email.com', 30),
-('María García', 'maria@email.com', 28),
-('Carlos Rodriguez', 'carlos@email.com', 35)
+-- Default password for all users is 'password123' (hashed with bcrypt)
+INSERT INTO users (nombre, email, edad, password_hash, role) VALUES 
+('Juan Pérez', 'juan@email.com', 30, '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
+('María García', 'maria@email.com', 28, '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'manager'),
+('Carlos Rodriguez', 'carlos@email.com', 35, '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user')
 ON CONFLICT (email) DO NOTHING;
 
 -- Insert sample data for activity_types
@@ -129,12 +134,12 @@ INSERT INTO activities (nombre, descripcion, fecha_programada, estado, prioridad
 ON CONFLICT DO NOTHING;
 
 -- Insert sample data for booking_apartments
-INSERT INTO booking_apartments (apartamento_id, torre_id, usuario_id, fecha_check_in, fecha_check_out, estado, noches, observaciones) VALUES 
-(1, 1, 1, '2024-03-15', '2024-03-20', 'confirmed', 5, 'Reserva familiar para vacaciones de semana santa'),
-(2, 1, 2, '2024-03-22', '2024-03-25', 'pending', 3, 'Viaje de negocios'),
-(3, 2, 3, '2024-04-01', '2024-04-10', 'confirmed', 9, 'Reserva de penthouse para luna de miel'),
-(1, 1, 2, '2024-04-15', '2024-04-18', 'pending', 3, 'Fin de semana largo'),
-(2, 1, 1, '2024-05-01', '2024-05-05', 'cancelled', 4, 'Cancelada por cambio de planes');
+INSERT INTO booking_apartments (apartamento_id, torre_id, usuario_id, fecha_check_in, fecha_check_out, estado, noches, tarifa_por_noche, tarifa_limpieza, observaciones) VALUES 
+(1, 1, 1, '2024-03-15', '2024-03-20', 'confirmed', 5, 150000.00, 50000.00, 'Reserva familiar para vacaciones de semana santa'),
+(2, 1, 2, '2024-03-22', '2024-03-25', 'pending', 3, 120000.00, 40000.00, 'Viaje de negocios'),
+(3, 2, 3, '2024-04-01', '2024-04-10', 'confirmed', 9, 300000.00, 80000.00, 'Reserva de penthouse para luna de miel'),
+(1, 1, 2, '2024-04-15', '2024-04-18', 'pending', 3, 150000.00, 50000.00, 'Fin de semana largo'),
+(2, 1, 1, '2024-05-01', '2024-05-05', 'cancelled', 4, 120000.00, 40000.00, 'Cancelada por cambio de planes');
 
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_apartments_numero ON apartments(numero);
@@ -144,6 +149,8 @@ CREATE INDEX IF NOT EXISTS idx_towers_numero ON towers(numero);
 CREATE INDEX IF NOT EXISTS idx_towers_nombre ON towers(nombre);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_nombre ON users(nombre);
+CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+CREATE INDEX IF NOT EXISTS idx_users_email_password ON users(email, password_hash);
 CREATE INDEX IF NOT EXISTS idx_bookings_apartamento_id ON booking_apartments(apartamento_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_torre_id ON booking_apartments(torre_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_usuario_id ON booking_apartments(usuario_id);

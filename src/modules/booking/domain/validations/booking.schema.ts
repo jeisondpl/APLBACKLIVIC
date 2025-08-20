@@ -14,6 +14,8 @@ export const CreateBookingSchema = z.object({
         z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha de check-out debe tener formato YYYY-MM-DD")
     ),
     estado: z.nativeEnum(BookingStatus).optional().default(BookingStatus.PENDING),
+    tarifaPorNoche: z.number().positive("La tarifa por noche debe ser un número positivo"),
+    tarifaLimpieza: z.number().min(0, "La tarifa de limpieza debe ser un número no negativo"),
     observaciones: z.string().max(500, "Las observaciones no pueden superar 500 caracteres").optional()
 }).refine((data) => {
     const checkIn = new Date(data.fechaCheckIn);
@@ -44,6 +46,8 @@ export const UpdateBookingSchema = z.object({
         z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha de check-out debe tener formato YYYY-MM-DD")
     ).optional(),
     estado: z.nativeEnum(BookingStatus).optional(),
+    tarifaPorNoche: z.number().positive("La tarifa por noche debe ser un número positivo").optional(),
+    tarifaLimpieza: z.number().min(0, "La tarifa de limpieza debe ser un número no negativo").optional(),
     observaciones: z.string().max(500, "Las observaciones no pueden superar 500 caracteres").optional()
 }).refine((data) => {
     if (data.fechaCheckIn && data.fechaCheckOut) {

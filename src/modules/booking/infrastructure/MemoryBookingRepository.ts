@@ -12,6 +12,8 @@ export class MemoryBookingRepository implements BookingRepository {
             fechaCheckOut: "2024-03-20",
             estado: BookingStatus.CONFIRMED,
             noches: 5,
+            tarifaPorNoche: 150000,
+            tarifaLimpieza: 50000,
             observaciones: "Reserva familiar para vacaciones de semana santa",
             createdAt: "2024-01-15T10:00:00.000Z",
             updatedAt: "2024-01-15T10:00:00.000Z"
@@ -25,6 +27,8 @@ export class MemoryBookingRepository implements BookingRepository {
             fechaCheckOut: "2024-03-25",
             estado: BookingStatus.PENDING,
             noches: 3,
+            tarifaPorNoche: 120000,
+            tarifaLimpieza: 40000,
             observaciones: "Viaje de negocios",
             createdAt: "2024-01-16T14:30:00.000Z",
             updatedAt: "2024-01-16T14:30:00.000Z"
@@ -38,6 +42,8 @@ export class MemoryBookingRepository implements BookingRepository {
             fechaCheckOut: "2024-04-10",
             estado: BookingStatus.CONFIRMED,
             noches: 9,
+            tarifaPorNoche: 300000,
+            tarifaLimpieza: 80000,
             observaciones: "Reserva de penthouse para luna de miel",
             createdAt: "2024-01-17T09:15:00.000Z",
             updatedAt: "2024-01-17T09:15:00.000Z"
@@ -51,6 +57,8 @@ export class MemoryBookingRepository implements BookingRepository {
             fechaCheckOut: "2024-04-18",
             estado: BookingStatus.PENDING,
             noches: 3,
+            tarifaPorNoche: 150000,
+            tarifaLimpieza: 50000,
             observaciones: "Fin de semana largo",
             createdAt: "2024-01-18T16:45:00.000Z",
             updatedAt: "2024-01-18T16:45:00.000Z"
@@ -64,6 +72,8 @@ export class MemoryBookingRepository implements BookingRepository {
             fechaCheckOut: "2024-05-05",
             estado: BookingStatus.CANCELLED,
             noches: 4,
+            tarifaPorNoche: 120000,
+            tarifaLimpieza: 40000,
             observaciones: "Cancelada por cambio de planes",
             createdAt: "2024-01-19T11:20:00.000Z",
             updatedAt: "2024-01-20T08:30:00.000Z"
@@ -152,6 +162,8 @@ export class MemoryBookingRepository implements BookingRepository {
             fechaCheckOut: bookingData.fechaCheckOut,
             estado: bookingData.estado || BookingStatus.PENDING,
             noches,
+            tarifaPorNoche: bookingData.tarifaPorNoche,
+            tarifaLimpieza: bookingData.tarifaLimpieza,
             observaciones: bookingData.observaciones,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()

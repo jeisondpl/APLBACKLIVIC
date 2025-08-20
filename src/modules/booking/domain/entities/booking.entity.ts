@@ -14,6 +14,8 @@ export interface BookingApartment {
     fechaCheckOut: string;
     estado: BookingStatus;
     noches: number;
+    tarifaPorNoche: number;
+    tarifaLimpieza: number;
     observaciones?: string;
     createdAt: string;
     updatedAt: string;
@@ -41,7 +43,22 @@ export interface CreateBookingRequest {
     fechaCheckIn: string;
     fechaCheckOut: string;
     estado?: BookingStatus;
+    tarifaPorNoche: number;
+    tarifaLimpieza: number;
     observaciones?: string;
+}
+
+export interface CreateBookingWithActivityRequest extends CreateBookingRequest {
+    createActivity?: boolean;
+    activityData?: {
+        nombre: string;
+        tipoId: number;
+        descripcion: string;
+        usuarioAsignadoId?: number;
+        prioridad?: string;
+        fechaProgramada?: string;
+        notas?: string;
+    };
 }
 
 export interface UpdateBookingRequest {
@@ -51,6 +68,8 @@ export interface UpdateBookingRequest {
     fechaCheckIn?: string;
     fechaCheckOut?: string;
     estado?: BookingStatus;
+    tarifaPorNoche?: number;
+    tarifaLimpieza?: number;
     observaciones?: string;
 }
 

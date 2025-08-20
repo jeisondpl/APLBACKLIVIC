@@ -1,4 +1,4 @@
-import { sql } from '@vercel/postgres';
+import { sql } from '@/lib/db';
 import { BookingRepository } from "../domain/models/BookingRepository";
 import { BookingApartment, CreateBookingRequest, UpdateBookingRequest, BookingFilters, BookingStatus, calculateNights } from "../domain/entities/booking.entity";
 
@@ -135,8 +135,8 @@ export class PostgresBookingRepository implements BookingRepository {
         
         const query = `
             INSERT INTO booking_apartments 
-            (apartamento_id, torre_id, usuario_id, fecha_check_in, fecha_check_out, estado, noches, observaciones)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            (apartamento_id, torre_id, usuario_id, fecha_check_in, fecha_check_out, estado, noches, tarifa_por_noche, tarifa_limpieza, observaciones)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             RETURNING *
         `;
         
@@ -148,6 +148,8 @@ export class PostgresBookingRepository implements BookingRepository {
             bookingData.fechaCheckOut,
             estado,
             noches,
+            bookingData.tarifaPorNoche,
+            bookingData.tarifaLimpieza,
             bookingData.observaciones
         ];
         
@@ -204,6 +206,18 @@ export class PostgresBookingRepository implements BookingRepository {
         if (bookingData.estado !== undefined) {
             updates.push(`estado = $${paramIndex}`);
             params.push(bookingData.estado);
+            paramIndex++;
+        }
+
+        if (bookingData.tarifaPorNoche !== undefined) {
+            updates.push(`tarifa_por_noche = $${paramIndex}`);
+            params.push(bookingData.tarifaPorNoche);
+            paramIndex++;
+        }
+
+        if (bookingData.tarifaLimpieza !== undefined) {
+            updates.push(`tarifa_limpieza = $${paramIndex}`);
+            params.push(bookingData.tarifaLimpieza);
             paramIndex++;
         }
 
@@ -323,6 +337,8 @@ export class PostgresBookingRepository implements BookingRepository {
             fechaCheckOut: row.fecha_check_out,
             estado: row.estado as BookingStatus,
             noches: row.noches,
+            tarifaPorNoche: parseFloat(row.tarifa_por_noche) || 0,
+            tarifaLimpieza: parseFloat(row.tarifa_limpieza) || 0,
             observaciones: row.observaciones,
             createdAt: row.created_at,
             updatedAt: row.updated_at,
